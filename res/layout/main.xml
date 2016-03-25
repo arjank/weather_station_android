@@ -1,28 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-        >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="20dp">
 
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Hello World, Main"
-            />
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number of updates:"
-            android:id="@+id/textView"/>
+    <View android:id="@+id/strut"
+          android:layout_width="0dp"
+          android:layout_height="0dp"
+          android:layout_centerHorizontal="true"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/counter"
-            android:layout_gravity="center_horizontal"/>
-</LinearLayout>
-
+            android:text="@string/Sunrise"
+            android:id="@+id/sunriseLabel"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@id/strut"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="08:00"
+            android:id="@+id/sunriseTime"
+            android:layout_alignBaseline="@id/sunriseLabel"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@id/strut"
+            android:layout_toEndOf="@id/sunriseLabel"
+            android:textAlignment="center"
+            android:textSize="40sp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/Sunset"
+            android:id="@+id/sunsetLabel"
+            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@id/strut"
+            android:layout_below="@id/sunriseLabel"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="20:00"
+            android:id="@+id/sunsetTime"
+            android:layout_alignBaseline="@id/sunsetLabel"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/sunsetLabel"
+            android:layout_below="@id/sunriseTime"
+            android:textSize="40sp"
+            />
+</RelativeLayout>
