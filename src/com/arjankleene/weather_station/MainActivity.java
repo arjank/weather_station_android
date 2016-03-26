@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.Manifest;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.arjankleene.astro.SolarInfo;
@@ -26,7 +27,8 @@ public class MainActivity extends Activity {
         public void onLocationChanged(Location location) {
             if (location.hasAccuracy() && location.getAccuracy() < 100) {
                 stopLocationUpdates();
-                Toast.makeText(getBaseContext(), "Found accurate location", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Found accurate location", Toast.LENGTH_SHORT).show();
+                hideProgressIndicator();
                 displayTimes(location);
             }
         }
@@ -59,24 +61,22 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        clearTimes();
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+            showProgressIndicator();
+            Toast.makeText(getBaseContext(), "Looking for current location", Toast.LENGTH_SHORT).show();
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2500, 5, locationListener);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopLocationUpdates();
     }
 
     @Override
@@ -92,17 +92,17 @@ public class MainActivity extends Activity {
         TextView sunsetTime = (TextView) findViewById(R.id.sunsetTime);
 
         GregorianCalendar sunrise = info.getSunRise();
-        if (sunrise != null) {
-            sunriseTime.setText(formatTime(sunrise));
-        } else {
-            sunriseTime.setText("");
-        }
+        displayTimeInField(sunrise, sunriseTime);
 
         GregorianCalendar sunset = info.getSunSet();
-        if (sunset != null) {
-            sunsetTime.setText(formatTime(sunset));
+        displayTimeInField(sunset, sunsetTime);
+    }
+
+    private void displayTimeInField(GregorianCalendar calendar, TextView txtView) {
+        if (calendar != null) {
+            txtView.setText(formatTime(calendar));
         } else {
-            sunsetTime.setText("");
+            txtView.setText("");
         }
     }
 
@@ -110,6 +110,22 @@ public class MainActivity extends Activity {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.removeUpdates(locationListener);
         }
+    }
+
+    private void showProgressIndicator() {
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressIndicator() {
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
+    }
+
+    private void clearTimes() {
+        TextView sunriseTime = (TextView) findViewById(R.id.sunriseTime);
+        TextView sunsetTime = (TextView) findViewById(R.id.sunsetTime);
+
+        sunriseTime.setText("");
+        sunsetTime.setText("");
     }
 
     private static String formatTime(GregorianCalendar calendar){
